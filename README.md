@@ -48,8 +48,6 @@ Allows to present radio buttons as segmented buttons
 
 ### BsPopover
 
-### BsSelect
-
 ### BsTooltip
 
 ### OnEnter
