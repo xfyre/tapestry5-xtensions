@@ -12,7 +12,7 @@ open-source project as a contribution to Apache Tapestry community.
 * Add ... Maven dependency to your project
 * Add xmlns:t5x="tapestry-library:t5xtensions" to yor .tml root element
 
-## Components list
+## Components
 
 ### AjaxUpload
 
@@ -37,3 +37,28 @@ Integration with Bootstrap modal component
 ### SegmentedControl
 
 Allows to present radio buttons as segmented buttons 
+
+## Mixins
+
+### AddAttribute
+
+### BfhPhone
+
+### BsConfirm
+
+### BsPopover
+
+### BsSelect
+
+### BsTooltip
+
+### OnEnter
+
+### OnEvent
+
+### ReloadZone
+
+### ToggleDropdown
+
+### Typeahead
+
