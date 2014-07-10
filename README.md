@@ -42,8 +42,6 @@ Allows to present radio buttons as segmented buttons
 
 ### AddAttribute
 
-### BfhPhone
-
 ### BsConfirm
 
 ### BsPopover
@@ -54,9 +52,17 @@ Allows to present radio buttons as segmented buttons
 
 ### OnEvent
 
-### ReloadZone
-
 ### ToggleDropdown
 
 ### Typeahead
+
+## Credits
+
+* Twitter Typeahead: https://github.com/twitter/typeahead.js
+* jQuery Hashchange plugin: http://benalman.com/projects/jquery-hashchange-plugin/
+
+## Author
+
+Ilya Obshadko
+
 
