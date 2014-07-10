@@ -4,12 +4,12 @@ tapestry5-xtensions
 This is a collection of Tapestry 5 components and mixins written to enhance 
 overall UX and, in particular, Twitter Bootstrap integration. 
 
-Initially it was created as a part of danceconvention.net, and moved to a separate
+Initially it was created as a part of [danceconvention.net](https://danceconvention.net/), and moved to a separate
 open-source project as a contribution to Apache Tapestry community.
 
-## Usage
+## Installation
 
-* Add ... Maven dependency to your project
+* Clone the project and run `mvn clean install` inside project's directory
 * Add `xmlns:t5x="tapestry-library:t5xtensions"` to yor .tml root element
 
 ## Components
@@ -50,7 +50,32 @@ Similar to native `<t:errors/>` component, but provides different layout (each e
 
 ### ModalDialog
 
-Integration with Bootstrap modal component
+Integration with Bootstrap modal component. Basically, to display modal, you need to create an empty zone and update this zone with injected block body during AJAX request.
+
+```java
+    @Inject
+    private Block modalDialogBlock;
+    
+    Object onActionFromShowModal () {
+        // do something
+        return modalDialogBlock;
+    }
+```
+
+```xml
+  <t:zone t:id="modalDialogZone" id="modalDialogZone">
+  </t:zone>
+  
+  <t:actionlink t:id="showModal" p:zone="modalDialogZone">Show modal</t:actionlink>
+  
+  <t:block t:id="modalDialogBlock">
+    <t5x:modaldialog p:title="message:modal.title">
+      <p:content>
+        <p>Modal dialog body</p>
+      </p:content>
+    </t5x:modaldialog>
+  </t:block>    
+```
 
 ### SegmentedControl
 
@@ -76,8 +101,8 @@ Allows to present radio buttons as segmented buttons
 
 ## Credits
 
-* Twitter Typeahead: https://github.com/twitter/typeahead.js
-* jQuery Hashchange plugin: http://benalman.com/projects/jquery-hashchange-plugin/
+* [Twitter Typeahead](https://github.com/twitter/typeahead.js)
+* [jQuery Hashchange plugin](http://benalman.com/projects/jquery-hashchange-plugin/)
 
 ## Author
 
