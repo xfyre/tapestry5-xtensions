@@ -103,7 +103,7 @@ public class AjaxUpload extends AbstractField {
             "inputId",  getClientId ()
         );
 
-        javaScriptSupport.require ( "t5-xtensions/ajaxupload" ).priority ( InitializationPriority.LATE ).with ( spec );
+        javaScriptSupport.require ( "t5xtensions/ajaxupload" ).priority ( InitializationPriority.LATE ).with ( spec );
     }
     
     Object onUpload ( String controlName ) {
