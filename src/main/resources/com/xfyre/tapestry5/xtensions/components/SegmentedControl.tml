@@ -1,0 +1,16 @@
+<t:container
+  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+  xmlns:p="tapestry:parameter">
+
+  <t:submit t:id="hiddenSubmit" p:defer="false" class="hidden"/>
+  <div class="btn-group" data-toggle="buttons" id="${clientId}">
+    <t:radiogroup t:id="segmentedControlRadio" p:value="value">
+      <t:loop p:source="model.options" p:value="option" p:encoder="optionModelEncoder">
+        <t:label p:for="radioControl" class="btn btn-default btn-sm ${optionSegmentClass}">
+          <t:radio p:value="option.value" t:id="radioControl" onchange="$('#${hiddenSubmitId}').click();"/>${option.label}
+        </t:label>
+      </t:loop>
+    </t:radiogroup>
+  </div>
+  
+</t:container>
