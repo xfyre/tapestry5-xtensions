@@ -189,6 +189,13 @@ Convenience mixin that toggles off Bootstrap dropdown when dropdown aciton is in
 
 ### Typeahead
 
+Replacement for built-in Tapestry Autocomplete mixin. Provides much more flexibility: allows you to specify suggestion templates, can handle list of `Map` objects of beans as completion results.
+
+```xml
+<t:textfield p:value="value" t:mixins="t5xtensions/typeahead" 
+             p:keys="literal:username,email" p:template="literal:{{username}}, {{email}}"/>
+```
+
 ## Credits
 
 * [Apache Tapestry](http://tapestry.apache.org/)
