@@ -79,28 +79,119 @@ Integration with Bootstrap modal component. Basically, to display modal, you nee
 
 ### SegmentedControl
 
-Allows to present radio buttons as segmented buttons 
+Segmented control backed by radio group. Looks similar to its iOS `UISegmentedControl` counterpart. Like `select` component, accepts `model` parameter.
+
+```xml
+<t5x:segmentedcontrol t:id="segmentedControl" p:model="valuesModel" p:value="value"/>
+```
 
 ## Mixins
 
 ### AddAttribute
 
+Allows to add attributes to elements (using JavaScript) after page rendering depending on selected conditions.
+For example, make a field read-only if certain condition is met.
+
+```xml
+<t:textfield p:value="value" t:mixins="t5xtensions/addattribute" 
+             p:condition="someCondition" p:attrname="readonly" p:attrvalue="readonly"/>
+```
+
 ### BsConfirm
+
+Confirmation dialog using Bootstrap.
+
+```xml
+<button t:id="submitDelete" t:type="submit" class="btn btn-danger" p:value="message:button.delete"
+        t:mixins="t5xtensions/bsconfirm" p:message="prop:removalConfirmation" p:confirmClass="btn-danger"/>
+
+```
 
 ### BsPopover
 
+Bootstrap popover component integration.
+
+```xml
+<a href="#" class="btn btn-sm btn-success" onclick="return false;"
+  t:type="any" t:mixins="t5xtensions/bspopover" 
+  data-toggle="popover" data-trigger="hover" data-html="true" 
+  data-title="Some title" 
+  data-content="Popover content" data-placement="right">
+  <span class="glyphicon glyphicon-ok-sign glyphicon-white"/>
+</a>
+```
+
 ### BsTooltip
+
+Bootstrap tooltip component integration.
+
+```xml
+<span t:type="any" class="btn btn-warning btn-xs" t:mixins="t5xtensions/bstooltip" 
+      title="Tooltip text" data-toggle="tooltip" data-placement="top">
+  <i class="glyphicon glyphicon-exclamation-sign glyphicon-white"/>
+</span>
+```
 
 ### OnEnter
 
+This component lets you trigger form submit from the specified submit element to handle sitiations when user presses enter within a text form control by mistake. Triggering form submit from a specified element allows you to bypass normal form submission in your server-side code using 
+
+```xml
+<t:form p:zone="zone" t:mixins="t5xtensions/onenter" p:submitElement="prop:defaultSubmitId">
+<t:submit t:id="submitDefault" class="hidden"/>
+<!-- some other form controls -->
+</t:form>
+```
+
+```java
+    void onSelectedFromSubmitDefault () {
+        this.skipValidation = true;
+    }
+```
+
 ### OnEvent
 
+Allows to update a zone or trigger form submit on specified client event.
+
+For example, submit the form when `change` event is triggered on `select`:
+
+```xml
+<t:select p:value="selectedValue" p:model="selectModel"
+          t:mixins="t5xtensions/onevent" p:submitElement="prop:hiddenSubmitId" p:clientEvent="change"/>
+```
+
+Update specified zone when radio button is selected:
+
+```xml
+<t:radio p:value="someValue" t:mixins="t5xtensions/onevent" 
+         p:serverevent="reloadzone" p:updatezone="prop:zoneId"/>
+```
+
+Check component source code for more options.
+
 ### ToggleDropdown
+
+Convenience mixin that toggles off Bootstrap dropdown when dropdown aciton is in fact an AJAX request.
+
+```xml
+<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="showLinks">
+  <span class="glyphicon glyphicon-plus"/>&#160;Show some links&#160;<span class="caret"/>
+</button>
+<ul class="dropdown-menu">
+  <li><t:actionlink t:id="link1" p:zone="zone" t:mixins="t5xtensions/ToggleDropdown" p:dropdownid="showLinks">
+      Ajax Action 1</t:actionlink>
+  </li>
+  <li><t:actionlink t:id="link2" p:zone="zone" t:mixins="t5xtensions/ToggleDropdown" p:dropdownid="showLinks">
+      Ajax Action 2</t:actionlink>
+  </li>
+</ul>
+```
 
 ### Typeahead
 
 ## Credits
 
+* [Apache Tapestry](http://tapestry.apache.org/)
 * [Twitter Typeahead](https://github.com/twitter/typeahead.js)
 * [jQuery Hashchange plugin](http://benalman.com/projects/jquery-hashchange-plugin/)
 
