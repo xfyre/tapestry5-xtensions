@@ -10,25 +10,43 @@ open-source project as a contribution to Apache Tapestry community.
 ## Usage
 
 * Add ... Maven dependency to your project
-* Add xmlns:t5x="tapestry-library:t5xtensions" to yor .tml root element
+* Add `xmlns:t5x="tapestry-library:t5xtensions"` to yor .tml root element
 
 ## Components
 
 ### AjaxUpload
 
-AJAX upload component provides basic integration with Blueimp jQuery-File-Upload.
+AJAX upload component provides basic integration with Blueimp jQuery-File-Upload. Please note that you need to persist `uploadedFile` parameter elsewhere so it's not lost during form submission.
+
+Basic usage:
+
+```xml
+<t5x:ajaxupload t:id="ajaxFileUpload" p:value="uploadedFile"/>
+```
 
 ### DropdownField
 
-Sets hidden field value from Bootstrap dropdown component.
+Sets hidden field value from Bootstrap dropdown component. Acts very similar to standard `select` component (i.e. accepts `model` parameter or creates model automatically if `value` contains `enum` type.
+
+```xml
+<t5x:dropdownfield p:value="currency"/>
+```
 
 ### FormatDate
 
-Shorthand component for formatting dates.
+Convenience component for formatting dates.
+
+```xml
+<t5x:formatdate p:date="dateValue" p:format="dd.MM.yyyy"/>
+```
 
 ### FormErrors
 
-Similar to native Tapestry Errors component, but provides different layout (each error message has its own alert box).
+Similar to native `<t:errors/>` component, but provides different layout (each error message has its own alert box).
+
+```xml
+<t5x:formerrors/>
+```
 
 ### ModalDialog
 
