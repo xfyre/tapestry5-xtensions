@@ -15,10 +15,21 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.apache.tapestry5.util.EnumSelectModel;
 
+/**
+ * Dropdown field, based on Bootstrap dropdown component
+ * @author xfire
+ *
+ */
 public class DropdownField {
+    /**
+     * Value to set from this dropdown
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
     private Object value;
     
+    /**
+     * Selection model (provided automatically for enum-typed values)
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
     private SelectModel model;
     

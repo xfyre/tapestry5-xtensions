@@ -12,27 +12,40 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
 /**
- * This mixin allows handling of autocompletion selection events. You need to pass <b>updateZone</b>
- * parameter (required).<br/><br/>
- * Your event handler should conform to the following
- * contract:<br/><br/> <b>onAutocompleteSelectedFromFieldName(String value)</b>
+ * This mixin allows handling of client-side events. When <strong>submitElement</strong> is specified,
+ * client-side event triggers form submit; otherwise, <strong>serverEvent</strong> is triggered.
  * @author xfire
  *
  */
 @Events("autocompleteselected")
 public class OnEvent {
+    /**
+     * Zone to update
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
     private String updateZone;
     
+    /**
+     * Submit element
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
     private String submitElement;
     
+    /**
+     * Client event to listen to
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="click")
     private String clientEvent;
     
+    /**
+     * Server event to trigger
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="action")
     private String serverEvent;
     
+    /**
+     * Reset this field when client event is triggered 
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
     private String resetField;
     

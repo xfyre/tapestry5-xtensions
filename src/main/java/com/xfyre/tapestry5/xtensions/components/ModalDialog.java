@@ -7,14 +7,27 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
-@Events("modalHidden")
+/**
+ * Bootstrap modal dialog support 
+ * @author xfire
+ *
+ */
+@Events(ModalDialog.EVENT_MODAL_HIDDEN)
 public class ModalDialog implements ClientElement {
+    public static final String EVENT_MODAL_HIDDEN = "modalHidden";
+    
     @Parameter(value="prop:componentResources.id",defaultPrefix=BindingConstants.LITERAL)  
     private String clientId;  
-     
+    
+    /**
+     * Content block for this modal
+     */
     @Property @Parameter(required=true,defaultPrefix=BindingConstants.BLOCK)  
     private Block content;  
      
+    /**
+     * Modal dialog title
+     */
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)  
     private String title;  
     
@@ -24,6 +37,9 @@ public class ModalDialog implements ClientElement {
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="600")
     private Integer height;
     
+    /**
+     * Zone to update when user dismisses modal
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String updateZone;
     

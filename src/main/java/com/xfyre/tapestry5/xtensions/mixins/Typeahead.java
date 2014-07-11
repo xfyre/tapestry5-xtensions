@@ -19,9 +19,17 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
 @Events("completionsRequested")
 public class Typeahead {
+    /**
+     * Suggestion template. Equals to <strong>{{value}}</strong> by default. If you specify
+     * non-default template, make sure you set <strong>keys</strong> accordingly.
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="literal:<p>{{value}}</p>")
     private String template;
     
+    /**
+     * If you provide a list of beans of list of {@link Map} objects as a suggestions list,
+     * you may specify keys you're interested in. 
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="literal:value")
     private String keys;
     

@@ -13,19 +13,39 @@ import org.apache.tapestry5.services.FormSupport;
 import org.apache.tapestry5.services.javascript.InitializationPriority;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+/**
+ * Customizable confirmation dialog for Bootstrap
+ * @author xfire
+ *
+ */
 public class BsConfirm {
+    /**
+     * Confirmation title
+     */
     @Parameter(required=false,value="message:title.confirm",defaultPrefix=BindingConstants.LITERAL)
     private String title;
     
+    /**
+     * Confirmation message
+     */
     @Parameter(required=false,value="message:confirm.action",defaultPrefix=BindingConstants.LITERAL)
     private String message;
     
+    /**
+     * Confirm button text
+     */
     @Parameter(required=false,value="message:button.ok",defaultPrefix=BindingConstants.LITERAL)
     private String confirm;
     
+    /**
+     * Confirm button CSS class
+     */
     @Parameter(required=false,value="btn-primary",defaultPrefix=BindingConstants.LITERAL)
     private String confirmClass;
     
+    /**
+     * Cancel button text 
+     */
     @Parameter(required=false,value="message:button.cancel",defaultPrefix=BindingConstants.LITERAL)
     private String cancel;
     

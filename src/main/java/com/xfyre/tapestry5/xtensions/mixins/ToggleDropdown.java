@@ -8,6 +8,11 @@ import org.apache.tapestry5.annotations.InjectContainer;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+/**
+ * Allows to toggle Bootstrap dropdown when dropdown menu link is in fact an AJAX action
+ * @author xfire
+ *
+ */
 public class ToggleDropdown {
     /**
      * Pass dropdown button id

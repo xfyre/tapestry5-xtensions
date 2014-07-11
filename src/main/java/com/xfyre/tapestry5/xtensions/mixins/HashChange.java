@@ -18,7 +18,17 @@ import org.apache.tapestry5.services.javascript.InitializationPriority;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.slf4j.Logger;
 
+/**
+ * Hashchange support for Tapestry. For usage with {@link EventLink} or {@link ActionLink}.
+ * For {@link EventLink} event name acts as a hash value; for {@link ActionLink} component
+ * id is used as a hash value.
+ * @author xfire
+ *
+ */
 public class HashChange {
+    /**
+     * Zone to update
+     */
     @Parameter(defaultPrefix=BindingConstants.LITERAL)
     private String zone;
 

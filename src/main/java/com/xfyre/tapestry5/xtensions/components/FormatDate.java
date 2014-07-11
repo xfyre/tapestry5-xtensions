@@ -8,10 +8,21 @@ import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.annotations.Parameter;
 
+/**
+ * Convenience component for formatting dates
+ * @author xfire
+ *
+ */
 public class FormatDate {
+    /**
+     * Date value
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
     private Date date;
     
+    /**
+     * Format string
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.LITERAL)
     private String format;
     

@@ -6,6 +6,11 @@ import org.apache.tapestry5.annotations.InjectContainer;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+/**
+ * Integration for Bootstrap Form Helpers phone component
+ * @author xfire
+ *
+ */
 public class BfhPhone {
     @Inject
     private JavaScriptSupport javaScriptSupport;

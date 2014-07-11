@@ -15,20 +15,28 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.apache.tapestry5.upload.services.MultipartDecoder;
 import org.apache.tapestry5.upload.services.UploadedFile;
 
+/**
+ * AJAX Upload control, based on Blueimp jQuery-File-Upload library
+ * @author xfire
+ *
+ */
 @Events(AjaxUpload.EVENT_FILE_UPLOADED) 
 @SupportsInformalParameters
 public class AjaxUpload extends AbstractField {
     public static final String MULTIPART_ENCTYPE = "multipart/form-data";
     public static final String EVENT_FILE_UPLOADED = "fileUploaded";
     
+    /**
+     * Uploaded file is bound to this parameter
+     */
     @Parameter(defaultPrefix=BindingConstants.PROP,required=true,principal=true,autoconnect=true)
     private UploadedFile value;
     
+    /**
+     * Input validator
+     */
     @Parameter(defaultPrefix=BindingConstants.VALIDATE)
     private FieldValidator<Object> validate;    
-    
-    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="false")
-    private Boolean multiple;
     
     @Inject
     private ComponentResources resources;

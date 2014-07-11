@@ -5,12 +5,12 @@ import java.util.List;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.ValidationTracker;
 import org.apache.tapestry5.annotations.Environmental;
-import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.corelib.components.Errors;
 
+/**
+ * Drop-in replacement for {@link Errors} component. Displays each error in a separate alert box.
+ */
 public class FormErrors {
-    @Parameter
-    private String            header;
-
     @Environmental(false)
     private ValidationTracker tracker;
 

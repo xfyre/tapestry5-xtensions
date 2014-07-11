@@ -8,10 +8,21 @@ import org.apache.tapestry5.corelib.components.Submit;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
+/**
+ * Bootstrap segmented radio control support
+ * @author xfire
+ *
+ */
 public class SegmentedControl implements Field {
+    /**
+     * Value to update
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
     private Object value;
     
+    /**
+     * Selection model
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private SelectModel model;
     

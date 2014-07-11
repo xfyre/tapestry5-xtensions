@@ -6,6 +6,11 @@ import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.InjectContainer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+/**
+ * Bootstrap popover component support
+ * @author xfire
+ *
+ */
 public class BsPopover {
     @InjectContainer
     private ClientElement ownerElement;

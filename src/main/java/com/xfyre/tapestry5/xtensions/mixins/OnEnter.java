@@ -8,7 +8,15 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+/**
+ * Allows to trigger submit from a specified submit element when user presses Enter inside text control
+ * @author xfire
+ *
+ */
 public class OnEnter {
+    /**
+     * Submit element to trigger submit from
+     */
     @Parameter(required=true,defaultPrefix=BindingConstants.LITERAL)
     private String submitElement;
     
