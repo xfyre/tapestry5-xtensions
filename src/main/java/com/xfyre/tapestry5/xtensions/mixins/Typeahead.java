@@ -17,8 +17,10 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.javascript.InitializationPriority;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
-@Events("completionsRequested")
+@Events(Typeahead.EVENT_COMPLETIONS_REQUESTED)
 public class Typeahead {
+    public static final String EVENT_COMPLETIONS_REQUESTED = "completionsRequested";
+
     /**
      * Suggestion template. Equals to <strong>{{value}}</strong> by default. If you specify
      * non-default template, make sure you set <strong>keys</strong> accordingly.
@@ -32,6 +34,22 @@ public class Typeahead {
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="literal:value")
     private String keys;
+    
+    /**
+     * Identifier key. If suggestions list contains duplicate names, use this key to select
+     * entries by identifier (assuming that such identifier does exist). Must be used in conjunction
+     * with <strong>identifierField</strong>
+     */
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
+    private String identifierKey;
+    
+    /**
+     * Identifier field DOM id (usually this is a hidden field). On selection/blur this field is set to a value
+     * identified by <strong>identifierKey</strong>. On selection, special JS event <em>typeaheadmixin:selected</em>
+     * is triggered on input field, so you can handle successful selection.  
+     */
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
+    private String identifierField;
     
     @Inject
     private ComponentResources resources;
@@ -52,6 +70,11 @@ public class Typeahead {
                 "template",     template
         );
         
+        if ( identifierKey != null && identifierField != null ) {
+            params.put ( "identifierKey", identifierKey );
+            params.put ( "identifierField", identifierField );
+        }
+        
         jsSupport.require ( "t5xtensions/typeaheadmixin" ).priority ( InitializationPriority.LATE ).with ( params );
     }
     
@@ -64,7 +87,7 @@ public class Typeahead {
             }
         };
         
-        resources.triggerEvent ( "completionsRequested", new Object[] { input }, callback );
+        resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, new Object[] { input }, callback );
         
         JSONArray matches = new JSONArray ();
         for ( Object obj : holder.get () ) {
@@ -78,9 +101,22 @@ public class Typeahead {
                     if ( map.containsKey ( key.trim () ) )
                         suggestion.put ( key.trim (), map.get ( key.trim () ) );
                 
+                if ( identifierKey != null )
+                    if ( map.containsKey ( identifierKey ) )
+                        suggestion.put ( identifierKey, map.get ( identifierKey ) );
+                    else
+                        throw new IllegalArgumentException ( String.format ( "map %s doesn't contain identifier key %s", map, identifierKey ) );
+                
                 if ( suggestion.keys ().size () == 0 )
                     throw new IllegalArgumentException ( String.format ( "map %s doesn't have any of provided keys %s", map, keys ) );
             } else {
+                if ( identifierKey != null )
+                    try { 
+                        suggestion.put ( identifierKey, BeanUtils.getProperty ( obj, identifierKey.trim () ) );
+                    } catch ( Exception e ) {
+                        throw new IllegalArgumentException ( String.format ( "cannot get property value of object %s for key %s: %s", obj, identifierKey, e.getMessage ()  ) );
+                    }
+                
                 for ( String key : StringUtils.split ( keys, ',' ) )
                     try {
                         suggestion.put ( key.trim (), BeanUtils.getProperty ( obj, key.trim () ) );

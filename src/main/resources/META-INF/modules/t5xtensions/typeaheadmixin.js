@@ -30,5 +30,26 @@ define(["jquery", "t5/core/utils"], function($, utils) {
                 templates: { suggestion: Handlebars.compile(spec.template) }
             }
         );
+        
+        if (spec.identifierField) {
+            var $identifierField = $('#' + spec.identifierField);
+            
+            $ttField.on('typeahead:selected', function(event, suggestion, dataset) {
+                $identifierField.val(suggestion[spec.identifierKey]);
+                $ttField.trigger('typeaheadmixin:selected');
+            });
+            
+            $ttField.on('typeahead:opened', function(event) {
+                if (!$identifierField.val() || !$ttField.val()) {
+                    $identifierField.val(null);
+                }
+            });
+            
+            $ttField.on('typeahead:closed', function(event) {
+                if (!$identifierField.val() || !$ttField.val()) {
+                    $identifierField.val(null);
+                }
+            });            
+        }
     };
 });
