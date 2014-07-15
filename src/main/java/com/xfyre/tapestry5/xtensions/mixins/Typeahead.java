@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.ClientElement;
@@ -51,6 +52,13 @@ public class Typeahead {
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String identifierField;
     
+    /**
+     * Provide additional context values to <strong>onCompletionsRequested</strong> handler. <em>Be careful
+     * when using inside loops!</em> Remember that loop variables are evaluated only during rendering phase.
+     */
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
+    private Object[] additionalContext;
+    
     @Inject
     private ComponentResources resources;
     
@@ -65,7 +73,7 @@ public class Typeahead {
         String[] iterableKeys = StringUtils.split ( keys, ',' );
         JSONObject params = new JSONObject ( 
                 "id",           ownerElement.getClientId (),
-                "url",          resources.createEventLink ( "typeahead" ).toAbsoluteURI (),
+                "url",          resources.createEventLink ( "typeahead", additionalContext ).toAbsoluteURI (),
                 "displayKey",   iterableKeys[0].trim (),
                 "template",     template
         );
@@ -78,7 +86,7 @@ public class Typeahead {
         jsSupport.require ( "t5xtensions/typeaheadmixin" ).priority ( InitializationPriority.LATE ).with ( params );
     }
     
-    Object onTypeahead ( @RequestParameter("t:input") String input ) throws ClassNotFoundException {
+    Object onTypeahead ( @RequestParameter("t:input") String input, Object ... additionalContext ) throws ClassNotFoundException {
         final Holder<List<?>> holder = new Holder<List<?>> ();
         ComponentEventCallback<List<?>> callback = new ComponentEventCallback<List<?>> () {
             public boolean handleResult ( List<?> result ) {
@@ -87,7 +95,10 @@ public class Typeahead {
             }
         };
         
-        resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, new Object[] { input }, callback );
+        if ( additionalContext != null && additionalContext.length > 0 )
+            resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, ArrayUtils.addAll ( new Object[] { input }, additionalContext ), callback );
+        else    
+            resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, new Object[] { input }, callback );
         
         JSONArray matches = new JSONArray ();
         for ( Object obj : holder.get () ) {
