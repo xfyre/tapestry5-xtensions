@@ -4,8 +4,8 @@ tapestry5-xtensions
 This is a collection of Tapestry 5 components and mixins written to enhance 
 overall UX and, in particular, Twitter Bootstrap integration. 
 
-Initially it was created as a part of [danceconvention.net](https://danceconvention.net/), and moved to a separate
-open-source project as a contribution to Apache Tapestry community.
+Initially it was created as a part of [danceconvention.net](https://danceconvention.net/), 
+and moved to separate open-source project as a contribution to Apache Tapestry community.
 
 ## Installation
 
@@ -16,7 +16,9 @@ open-source project as a contribution to Apache Tapestry community.
 
 ### AjaxUpload
 
-AJAX upload component provides basic integration with Blueimp jQuery-File-Upload. Please note that you need to persist `uploadedFile` parameter elsewhere so it's not lost during form submission.
+AJAX upload component providing basic integration with Blueimp jQuery-File-Upload. Please note that you need to persist 
+`uploadedFile` parameter elsewhere so it's not lost during form submission. Currently only single-file AJAX upload is 
+supported - feel free to fork and modify as needed.
 
 Basic usage:
 
@@ -26,7 +28,9 @@ Basic usage:
 
 ### DropdownField
 
-Sets hidden field value from Bootstrap dropdown component. Acts very similar to standard `select` component (i.e. accepts `model` parameter or creates model automatically if `value` contains `enum` type.
+Wrapper around Tapestry `Hidden` component that receives its value from Bootstrap drop-down. 
+Acts very similar to standard `Select` component (i.e. accepts `model` parameter or creates model 
+automatically if `value` contains `enum` type.
 
 ```xml
 <t5x:dropdownfield p:value="currency"/>
@@ -42,7 +46,7 @@ Convenience component for formatting dates.
 
 ### FormErrors
 
-Similar to native `<t:errors/>` component, but provides different layout (each error message has its own alert box).
+Similar to Tapestry `Errors` component, but provides different layout (each error message has its own alert box).
 
 ```xml
 <t5x:formerrors/>
@@ -50,7 +54,8 @@ Similar to native `<t:errors/>` component, but provides different layout (each e
 
 ### ModalDialog
 
-Integration with Bootstrap modal component. Basically, to display modal, you need to create an empty zone and update this zone with injected block body during AJAX request.
+Integration with Bootstrap modal component. Basically, to display modal, you need to create an empty zone and update 
+this zone with injected block body during AJAX request.
 
 ```java
     @Inject
@@ -69,7 +74,7 @@ Integration with Bootstrap modal component. Basically, to display modal, you nee
   <t:actionlink t:id="showModal" p:zone="modalDialogZone">Show modal</t:actionlink>
   
   <t:block t:id="modalDialogBlock">
-    <t5x:modaldialog p:title="message:modal.title">
+    <t5x:modaldialog p:title="literal:Modal dialog title">
       <p:content>
         <p>Modal dialog body</p>
       </p:content>
@@ -99,7 +104,7 @@ For example, make a field read-only if certain condition is met.
 
 ### BsConfirm
 
-Confirmation dialog using Bootstrap.
+Confirmation dialog using Bootstrap. Similar to Tapestry built-in `Confirm` component, but more flexible.
 
 ```xml
 <button t:id="submitDelete" t:type="submit" class="btn btn-danger" p:value="message:button.delete"
@@ -109,7 +114,7 @@ Confirmation dialog using Bootstrap.
 
 ### BsPopover
 
-Bootstrap popover component integration.
+Bootstrap popover component integration. Uses Boostrap `data-*` attributes, doesn't require any additional parameters.
 
 ```xml
 <a href="#" class="btn btn-sm btn-success" onclick="return false;"
@@ -123,7 +128,7 @@ Bootstrap popover component integration.
 
 ### BsTooltip
 
-Bootstrap tooltip component integration.
+Bootstrap tooltip component integration. Uses Boostrap `data-*` attributes, doesn't require any additional parameters.
 
 ```xml
 <span t:type="any" class="btn btn-warning btn-xs" t:mixins="t5xtensions/bstooltip" 
@@ -134,7 +139,10 @@ Bootstrap tooltip component integration.
 
 ### OnEnter
 
-This component lets you trigger form submit from the specified submit element to handle sitiations when user presses enter within a text form control by mistake. Triggering form submit from a specified element allows you to bypass normal form submission in your server-side code using 
+This component lets you trigger form submit from the specified submit element to handle sitiations 
+when user presses enter within a text form control by mistake. Triggering form submit from a specified 
+element allows you to bypass normal form submission in your server-side code using `onSelected` submission
+handlers.
 
 ```xml
 <t:form p:zone="zone" t:mixins="t5xtensions/onenter" p:submitElement="prop:defaultSubmitId">
@@ -171,7 +179,7 @@ Check component source code for more options.
 
 ### ToggleDropdown
 
-Convenience mixin that toggles off Bootstrap dropdown when dropdown aciton is in fact an AJAX request.
+Convenience mixin that toggles off Bootstrap dropdown when dropdown action is an AJAX request (otherwise dropdown doesn't toggle).
 
 ```xml
 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="showLinks">
@@ -189,12 +197,22 @@ Convenience mixin that toggles off Bootstrap dropdown when dropdown aciton is in
 
 ### Typeahead
 
-Replacement for built-in Tapestry Autocomplete mixin. Provides much more flexibility: allows you to specify suggestion templates, can handle list of `Map` objects of beans as completion results.
+Replacement for built-in Tapestry Autocomplete mixin. Provides much more flexibility: allows you to specify suggestion templates, 
+can handle list of `Map` objects or list of beans as completion results.
 
 ```xml
 <t:textfield p:value="value" t:mixins="t5xtensions/typeahead" 
              p:keys="literal:username,email" p:template="literal:{{username}}, {{email}}"/>
 ```
+
+```java
+    List<MyUser> onCompletionsRequestedFromUserLookupField ( String partial ) {
+        return userManagerService.getUserSuggestions ( partial );
+    }
+```
+
+*Note*: when you are using list of beans or list of `Map` objects for suggestions, all the keys you have specified in `keys` parameter
+must be present as bean properties or map keys, respectively. Otherwise you get an error.  
 
 ## Credits
 
