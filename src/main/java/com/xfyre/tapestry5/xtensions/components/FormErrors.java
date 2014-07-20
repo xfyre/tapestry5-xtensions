@@ -5,12 +5,19 @@ import java.util.List;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.ValidationTracker;
 import org.apache.tapestry5.annotations.Environmental;
+import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.corelib.components.Errors;
 
 /**
  * Drop-in replacement for {@link Errors} component. Displays each error in a separate alert box.
  */
 public class FormErrors {
+    /**
+     * Show global errors only (not associated with any field)
+     */
+    @Parameter
+    private boolean globalOnly;
+    
     @Environmental(false)
     private ValidationTracker tracker;
 
@@ -29,7 +36,7 @@ public class FormErrors {
          * 
          */
         
-        List<String> errors = tracker.getErrors ();
+        List<String> errors = globalOnly ? tracker.getUnassociatedErrors () : tracker.getErrors ();
 
         if ( !errors.isEmpty () ) {
             for ( String message : errors ) {
