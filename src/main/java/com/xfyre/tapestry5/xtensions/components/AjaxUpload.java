@@ -1,5 +1,6 @@
 package com.xfyre.tapestry5.xtensions.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.base.AbstractField;
@@ -27,16 +28,22 @@ public class AjaxUpload extends AbstractField {
     public static final String EVENT_FILE_UPLOADED = "fileUploaded";
     
     /**
-     * Uploaded file is bound to this parameter
+     * Uploaded file is bound to this parameter (required)
      */
     @Parameter(defaultPrefix=BindingConstants.PROP,required=true,principal=true,autoconnect=true)
     private UploadedFile value;
     
     /**
-     * Input validator
+     * Input validator (optional)
      */
     @Parameter(defaultPrefix=BindingConstants.VALIDATE)
-    private FieldValidator<Object> validate;    
+    private FieldValidator<Object> validate;
+    
+    /**
+     * Additional zone to update after file upload (optional)
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL)
+    private String zone;
     
     @Inject
     private ComponentResources resources;
@@ -101,6 +108,13 @@ public class AjaxUpload extends AbstractField {
         
         writer.end (); // input field
         writer.end (); // button span
+        
+        String filenameId = getClientId () + "_filename";
+        writer.element ( "span", "id", filenameId, "style", "margin-left: 16px;" );
+        if ( value != null )
+            writer.write ( String.format ( "%s (%d KB)", value.getFileName (), value.getSize () / 1024 ) );
+        writer.end (); // filename container
+        
         writer.end (); // container div
     }
     
@@ -110,7 +124,14 @@ public class AjaxUpload extends AbstractField {
             "url",      resources.createEventLink ( "upload", getControlName () ).toAbsoluteURI (),
             "inputId",  getClientId ()
         );
-
+        
+        if ( StringUtils.isNotBlank ( zone ) ) {
+            Link zoneUpdateUrl = resources.createEventLink ( "updateZone" );
+            
+            spec.put ( "zone", zone );
+            spec.put ( "zoneUpdateUrl", zoneUpdateUrl.toAbsoluteURI () );
+        }
+        
         javaScriptSupport.require ( "t5xtensions/ajaxupload" ).priority ( InitializationPriority.LATE ).with ( spec );
     }
     
