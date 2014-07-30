@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.base.AbstractField;
-import org.apache.tapestry5.internal.util.Holder;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONArray;
@@ -40,7 +39,8 @@ public class AjaxUpload extends AbstractField {
     private FieldValidator<Object> validate;
     
     /**
-     * Additional zone to update after file upload (optional)
+     * Additional zone to update after file upload (optional). You must provide appropriate handler
+     * for <strong>fileUploaded</strong> event and return zone body from this handler.
      */
     @Parameter(defaultPrefix=BindingConstants.LITERAL)
     private String zone;
@@ -126,7 +126,7 @@ public class AjaxUpload extends AbstractField {
         );
         
         if ( StringUtils.isNotBlank ( zone ) ) {
-            Link zoneUpdateUrl = resources.createEventLink ( "updateZone" );
+            Link zoneUpdateUrl = resources.createEventLink ( EVENT_FILE_UPLOADED );
             
             spec.put ( "zone", zone );
             spec.put ( "zoneUpdateUrl", zoneUpdateUrl.toAbsoluteURI () );
@@ -138,31 +138,15 @@ public class AjaxUpload extends AbstractField {
     Object onUpload ( String controlName ) {
         value = decoder.getFileUpload ( controlName );
         
-        final Holder<JSONObject> holder = new Holder<JSONObject> ();
-        ComponentEventCallback<JSONObject> callback = new ComponentEventCallback<JSONObject> () {
-            public boolean handleResult ( JSONObject result ) {
-                if ( result != null ) {
-                    holder.put ( result );
-                    return true;
-                }
-                
-                return false;
-            }
-        };
-        resources.triggerEvent ( EVENT_FILE_UPLOADED, new Object[] { value }, callback );
-        
         JSONArray files = new JSONArray ();
         
-        if ( holder.hasValue () )
-            files.put ( holder.get () );
-        else
-            files.put ( new JSONObject (
-                    "name", value.getFileName (),
-                    "size", value.getSize (),
-                    "thumbnailUrl", resources.createEventLink ( "preview", value.getFileName () ).toAbsoluteURI (),
-                    "deleteUrl", resources.createEventLink ( "delete", value.getFileName () ).toAbsoluteURI (),
-                    "deleteType", "GET"
-            ) );
+        files.put ( new JSONObject (
+                "name", value.getFileName (),
+                "size", value.getSize (),
+                "thumbnailUrl", resources.createEventLink ( "preview", value.getFileName () ).toAbsoluteURI (),
+                "deleteUrl", resources.createEventLink ( "delete", value.getFileName () ).toAbsoluteURI (),
+                "deleteType", "GET"
+        ) );
         
         return new JSONObject ( "files", files );
     }
