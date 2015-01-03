@@ -219,6 +219,7 @@ must be present as bean properties or map keys, respectively. Otherwise you get 
 * [Apache Tapestry](http://tapestry.apache.org/)
 * [Twitter Typeahead](https://github.com/twitter/typeahead.js)
 * [jQuery Hashchange plugin](http://benalman.com/projects/jquery-hashchange-plugin/)
+* [jQuery File Upload](https://github.com/blueimp/jQuery-File-Upload)
 
 ## Author
 
