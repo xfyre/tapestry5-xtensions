@@ -5,10 +5,11 @@ define(["jquery","t5/core/events", "t5/core/zone", "bootstrap/modal"], function(
         var realWidth = spec.width > $(window).width() ? $(window).width() : spec.width;
         var realHeight = spec.height > $(window).height() ? $(window).height() : spec.height;
         var marginLeft = - (realWidth / 2);
-        
-//        $modal.width(realWidth);
-//        $('div.modal-body').attr('style', 'max-height: ' + (realHeight - 60) + 'px;');
+
+        var $modalDialog = $('#' + spec.id + ' > .modal-dialog');
+        $modalDialog.width(realWidth);
 //        $modal.css({marginLeft:marginLeft});
+//        $('div.modal-body').attr('style', 'max-height: ' + (realHeight - 60) + 'px;');
 //        if (spec.height > $(window).height())
 //            $modal.css({top:0});
         
@@ -20,6 +21,12 @@ define(["jquery","t5/core/events", "t5/core/zone", "bootstrap/modal"], function(
                 $zone.trigger(events.zone.refresh, {url: spec.updateZoneLink});
             }
         });
+
+        if (spec.hide && spec.zoneId) {
+            var $zone = $('#' + spec.zoneId);
+            $zone.on(events.zone.update, function(){ $modal.modal('hide'); })
+        }
+
         $modal.modal();
     };
 });
