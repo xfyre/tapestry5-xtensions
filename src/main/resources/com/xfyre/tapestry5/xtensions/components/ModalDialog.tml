@@ -14,11 +14,9 @@
         <div class="modal-body">
           <t:delegate p:to="content"/>
         </div>
-        <!-- 
-        <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">${message:button.close}</button>
+        <div class="modal-footer" t:type="if" p:test="enableFooter">
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">${message:button.close}</button>
         </div>
-        -->
       </div>
     </div>
   </div>  

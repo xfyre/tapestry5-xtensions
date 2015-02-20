@@ -40,6 +40,9 @@ public class ModalDialog implements ClientElement {
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="600")
     private Integer height;
 
+    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false")
+    private Boolean enableFooter;
+
     /**
      * Zone to update when user dismisses modal
      */
