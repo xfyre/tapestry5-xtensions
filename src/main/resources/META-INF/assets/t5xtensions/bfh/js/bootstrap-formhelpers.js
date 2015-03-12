@@ -7989,7 +7989,7 @@ var BFHPhoneFormatList = {
   'IQ': '+964 ddddddddd',
   'IE': '+353 ddddddddd',
   'IL': '+972 ddddddddd',
-  'IT': '+39 ddddddddd',
+  'IT': '+39 dddddddddd',
   'JM': '+1 (ddd) ddd-dddd',
   'JP': '+81 ddddddddd',
   'JO': '+962 ddddddddd',
