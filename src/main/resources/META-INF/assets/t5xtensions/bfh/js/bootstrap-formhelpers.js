@@ -8007,6 +8007,7 @@ var BFHPhoneFormatList = {
   'LI': '+423 ddddddddd',
   'LT': '+370 ddddddddd',
   'LU': '+352 ddddddddd',
+  'ME': '+382 dd dddddd',
   'MO': '+853 ddddddddd',
   'MG': '+261 ddddddddd',
   'MW': '+265 ddddddddd',
