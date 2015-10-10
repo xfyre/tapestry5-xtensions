@@ -1,5 +1,5 @@
 /*
- * jQuery File Upload Processing Plugin
+ * jQuery File Upload Processing Plugin 1.3.0
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2012, Sebastian Tschan
@@ -10,7 +10,7 @@
  */
 
 /* jshint nomen:false */
-/* global define, require, window */
+/* global define, window */
 
 (function (factory) {
     'use strict';
@@ -20,9 +20,6 @@
             'jquery',
             './jquery.fileupload'
         ], factory);
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS:
-        factory(require('jquery'));
     } else {
         // Browser globals:
         factory(
