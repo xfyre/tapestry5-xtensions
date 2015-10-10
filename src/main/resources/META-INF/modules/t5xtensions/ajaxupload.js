@@ -8,6 +8,7 @@ define(["jquery", "t5/core/events", "t5/core/zone", "blueimp/jquery.fileupload"]
         $input.fileupload({
             dataType: 'json',
             sequentialUploads: true,
+            dropZone: $button,
             autoUpload: true,
             url: spec.url,
             send: function(e, data) {
