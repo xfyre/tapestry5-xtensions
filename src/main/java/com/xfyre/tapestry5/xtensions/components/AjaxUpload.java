@@ -46,10 +46,16 @@ public class AjaxUpload extends AbstractField {
     private String zone;
     
     /**
-     * Auto-submit enclosing form on upload
+     * Client ID of form submit element
      */
-    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="false")
-    private Boolean autosubmit;
+    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=false)
+    private String autosubmit;
+    
+    /**
+     * Client ID of the element used as file drag-n-drop target (by default - the button itself)
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="prop:filenameId")
+    private String dropTarget;
     
     @Inject
     private ComponentResources resources;
@@ -100,13 +106,12 @@ public class AjaxUpload extends AbstractField {
     }
     
     void beginRender ( MarkupWriter writer ) {
-        String filenameId = getClientId () + "_filename";
         formSupport.setEncodingType ( MULTIPART_ENCTYPE );
         writer.element ( "div", "class", "form-control-static" );
         writer.element ( "span", "class", "fileinput-button " + cssClass );
         writer.element ( "i", "class", "glyphicon glyphicon-upload" ); writer.end ();
         writer.writeRaw ( "&#160;" );
-        writer.element ( "span", "id", filenameId  ).raw ( createButtonText() ); writer.end ();
+        writer.element ( "span", "id", getFilenameId() ).raw ( createButtonText() ); writer.end ();
         writer.element ( "input", "type", "file", "id", getClientId (), "name", getControlName () );
         
         validate.render ( writer );
@@ -122,8 +127,11 @@ public class AjaxUpload extends AbstractField {
     void afterRender ( MarkupWriter writer ) {
         JSONObject spec = new JSONObject (
             "url",      resources.createEventLink ( "upload", getControlName () ).toAbsoluteURI (),
-            "inputId",  getClientId ()
+            "inputId",  getClientId (),
+            "dropZone", dropTarget 
         );
+        
+        if (autosubmit != null) spec.put("submit", autosubmit);
         
         if ( StringUtils.isNotBlank ( zone ) ) {
             Link zoneUpdateUrl = resources.createEventLink ( EVENT_FILE_UPLOADED );
@@ -155,6 +163,10 @@ public class AjaxUpload extends AbstractField {
     @Override
     protected void processSubmission ( String controlName ) {
         
+    }
+    
+    public String getFilenameId () {
+    	return getClientId () + "_filename";
     }
     
     private String createButtonText () {
