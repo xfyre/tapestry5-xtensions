@@ -54,7 +54,7 @@ public class AjaxUpload extends AbstractField {
     /**
      * Client ID of the element used as file drag-n-drop target (by default - the button itself)
      */
-    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="prop:filenameId")
+    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="prop:formControlId")
     private String dropTarget;
     
     @Inject
@@ -107,7 +107,7 @@ public class AjaxUpload extends AbstractField {
     
     void beginRender ( MarkupWriter writer ) {
         formSupport.setEncodingType ( MULTIPART_ENCTYPE );
-        writer.element ( "div", "class", "form-control-static" );
+        writer.element ( "div", "class", "form-control-static", "id", getFormControlId () );
         writer.element ( "span", "class", "fileinput-button " + cssClass );
         writer.element ( "i", "class", "glyphicon glyphicon-upload" ); writer.end ();
         writer.writeRaw ( "&#160;" );
@@ -165,6 +165,10 @@ public class AjaxUpload extends AbstractField {
         
     }
     
+    public String getFormControlId () {
+    	return getClientId () + "_formcontrol";
+    }
+
     public String getFilenameId () {
     	return getClientId () + "_filename";
     }
