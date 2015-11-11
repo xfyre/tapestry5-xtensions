@@ -57,6 +57,18 @@ public class AjaxUpload extends AbstractField {
     @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="prop:formControlId")
     private String dropTarget;
     
+    /**
+     * File size limit in bytes
+     */
+    @Parameter(defaultPrefix=BindingConstants.PROP)
+    private Integer sizeLimit;
+    
+    /**
+     * Show progress bar while uploading
+     */
+    @Parameter(defaultPrefix=BindingConstants.PROP,required=true,value="false")
+    private Boolean showProgress;
+    
     @Inject
     private ComponentResources resources;
     
@@ -121,6 +133,13 @@ public class AjaxUpload extends AbstractField {
         writer.end (); // input field
         writer.end (); // button span
         writer.end (); // container div
+        
+        if (showProgress) {
+        	writer.element ( "div", "class", "progress", "style", "display: none;", "id", getClientId() + "_progress" );
+        	writer.element ( "div", "class", "progress-bar progress-bar-info", "role", "progressBar", "width", "0%" );
+        	writer.end (); // progress bar
+        	writer.end (); // progress container
+        }
     }
     
     @Import(stylesheet={"blueimp/css/jquery.fileupload.css"})
@@ -128,7 +147,8 @@ public class AjaxUpload extends AbstractField {
         JSONObject spec = new JSONObject (
             "url",      resources.createEventLink ( "upload", getControlName () ).toAbsoluteURI (),
             "inputId",  getClientId (),
-            "dropZone", dropTarget 
+            "dropZone", dropTarget,
+            "progress",	showProgress
         );
         
         if (autosubmit != null) spec.put("submit", autosubmit);
@@ -139,6 +159,9 @@ public class AjaxUpload extends AbstractField {
             spec.put ( "zone", zone );
             spec.put ( "zoneUpdateUrl", zoneUpdateUrl.toAbsoluteURI () );
         }
+        
+        if (sizeLimit != null)
+        	spec.put ( "sizeLimit", sizeLimit );
         
         javaScriptSupport.require ( "t5xtensions/ajaxupload" ).priority ( InitializationPriority.LATE ).with ( spec );
     }
