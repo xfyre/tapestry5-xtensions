@@ -128,7 +128,7 @@ public class AjaxUpload extends AbstractField {
         
         validate.render ( writer );
         resources.renderInformalParameters ( writer );
-        decorateInsideField();
+        decorateInsideField ();
         
         writer.end (); // input field
         writer.end (); // button span
