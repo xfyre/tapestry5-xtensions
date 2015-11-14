@@ -49,9 +49,15 @@ public class ModalDialog implements ClientElement {
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String updateZone;
 
+    /**
+     * Context for <b>modalHidden</b> event
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private Object[] updateContext;
 
+    /**
+     * Hide modal after updating its own zone
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false")
     private Boolean hideAfterZoneUpdate;
 
