@@ -1,5 +1,6 @@
 package com.xfyre.tapestry5.xtensions.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
@@ -37,6 +38,9 @@ public class SegmentedControl implements Field {
     @Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
     private String clientId;
 
+    @Parameter(name="class",required=false,defaultPrefix=BindingConstants.LITERAL)
+    private String cssClass;
+
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String label;
 
@@ -52,6 +56,8 @@ public class SegmentedControl implements Field {
     @InjectComponent
     private Submit hiddenSubmit;
 
+    private String assignedClientId;
+
     @Property
     private ValueEncoder<OptionModel> optionModelEncoder = new ValueEncoder<OptionModel> () {
         @Override
@@ -65,6 +71,11 @@ public class SegmentedControl implements Field {
             return new OptionModelImpl ( parts[1], parts[0] );
         }
     };
+
+
+    void setupRender () {
+        assignedClientId = javaScriptSupport.allocateClientId ( resources );
+    }
 
     void afterRender () {
         if ( autosubmit ) {
@@ -91,7 +102,7 @@ public class SegmentedControl implements Field {
 
     @Override
     public String getClientId () {
-        return clientId;
+        return assignedClientId;
     }
 
     @Override
@@ -129,4 +140,7 @@ public class SegmentedControl implements Field {
         return autosubmit != null && autosubmit;
     }
 
+    public String getCssClass () {
+        return StringUtils.defaultString ( cssClass );
+    }
 }
