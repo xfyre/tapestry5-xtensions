@@ -41,6 +41,9 @@ public class SegmentedControl implements Field {
     @Parameter(name="class",required=false,defaultPrefix=BindingConstants.LITERAL)
     private String cssClass;
 
+    @Parameter(name="buttonClass",required=false,defaultPrefix=BindingConstants.LITERAL,value="")
+    private String buttonClass;
+
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String label;
 
@@ -127,9 +130,9 @@ public class SegmentedControl implements Field {
 
     public String getOptionSegmentClass () {
         if ( option.getValue () != null && option.getValue ().equals ( value ) )
-            return "active";
+            return buttonClass + " active";
 
-        return "";
+        return buttonClass;
     }
 
     public String getHiddenSubmitId () {
