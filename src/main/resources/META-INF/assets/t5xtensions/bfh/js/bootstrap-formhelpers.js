@@ -16368,6 +16368,7 @@ var BFHTimezonesList = {
   };
 
   function formatNumber(format, number) {
+    if (!format || !number) return ''; // short-circuit to avoid exceptions
     var formattedNumber,
         indexFormat,
         indexNumber,

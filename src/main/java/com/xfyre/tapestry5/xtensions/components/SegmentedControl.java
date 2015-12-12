@@ -41,11 +41,14 @@ public class SegmentedControl implements Field {
     @Parameter(name="class",required=false,defaultPrefix=BindingConstants.LITERAL)
     private String cssClass;
 
-    @Parameter(name="buttonClass",required=false,defaultPrefix=BindingConstants.LITERAL,value="")
+    @Parameter(name="buttonClass",required=false,defaultPrefix=BindingConstants.LITERAL,value="btn btn-default")
     private String buttonClass;
 
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String label;
+
+    @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false") @Property(read=true,write=false)
+    private Boolean showCheckmark;
 
     @Property
     private OptionModel option;
@@ -81,13 +84,14 @@ public class SegmentedControl implements Field {
     }
 
     void afterRender () {
-        if ( autosubmit ) {
-            JSONObject params = new JSONObject (
-                "clientId", clientId,
-                "submitId", hiddenSubmit.getClientId ()
-            );
-            javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
-        }
+        JSONObject params = new JSONObject ( "clientId", assignedClientId );
+        if ( autosubmit )
+            params.put ( "autosubmit", true ).put ( "submitId", hiddenSubmit.getClientId () );
+
+        if ( showCheckmark )
+            params.put ( "showCheckmark", true );
+
+        javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
     }
 
 

@@ -7,8 +7,9 @@
   <div class="btn-group ${cssClass}" data-toggle="buttons" id="${clientId}">
     <t:radiogroup t:id="segmentedControlRadio" p:value="value">
       <t:loop p:source="model.options" p:value="option" p:encoder="optionModelEncoder">
-        <label for="radioControl" class="btn btn-default ${optionSegmentClass}">
+        <label for="radioControl" class="${optionSegmentClass}">
           <t:radio p:value="option.value" t:id="radioControl"/>
+          <t:if test="showCheckmark"><span data-segment-icon="true"/>&#160;</t:if>
           <span class="segment-label">${option.label}</span>
         </label>
       </t:loop>
