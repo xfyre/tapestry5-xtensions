@@ -6,7 +6,7 @@
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" t:type="any" t:id="dropdownButton">
     <span t:type="any" t:id="currentValueLabel">${label}</span>&#160;<span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" t:type="any" t:id="dropdownMenu">
+  <ul class="dropdown-menu" t:type="any" t:id="dropdownMenu" role="menu">
     <li t:type="loop" p:source="model.options" p:value="option" p:encoder="dropdownOptionEncoder">
       <a href="#" data-value="${option.value}" data-label="${option.label}" role="menuitem">${option.label}</a>
     </li>
