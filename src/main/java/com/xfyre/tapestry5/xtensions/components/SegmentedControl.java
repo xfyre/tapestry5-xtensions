@@ -74,7 +74,10 @@ public class SegmentedControl implements Field {
         @Override
         public OptionModel toValue ( String clientValue ) {
             String[] parts = clientValue.split ( "::" );
-            return new OptionModelImpl ( parts[1], parts[0] );
+            if ( parts.length > 1 )
+                return new OptionModelImpl ( parts[1], parts[0] );
+            else
+                return new OptionModelImpl ( parts[0], parts[0] );
         }
     };
 
