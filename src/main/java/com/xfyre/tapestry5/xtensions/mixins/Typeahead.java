@@ -28,14 +28,20 @@ public class Typeahead {
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="literal:<p>{{value}}</p>")
     private String template;
-    
+
+    /**
+     * Minimum length to initiate suggestion lookup
+     */
+    @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="2",allowNull=false)
+    private Integer minLength;
+
     /**
      * If you provide a list of beans of list of {@link Map} objects as a suggestions list,
-     * you may specify keys you're interested in. 
+     * you may specify keys you're interested in.
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="literal:value")
     private String keys;
-    
+
     /**
      * Identifier key. If suggestions list contains duplicate names, use this key to select
      * entries by identifier (assuming that such identifier does exist). Must be used in conjunction
@@ -43,63 +49,65 @@ public class Typeahead {
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String identifierKey;
-    
+
     /**
      * Identifier field DOM id (usually this is a hidden field). On selection/blur this field is set to a value
      * identified by <strong>identifierKey</strong>. On selection, special JS event <em>typeaheadmixin:selected</em>
-     * is triggered on input field, so you can handle successful selection.  
+     * is triggered on input field, so you can handle successful selection.
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String identifierField;
-    
+
     /**
      * Provide additional context values to <strong>onCompletionsRequested</strong> handler. <em>Be careful
      * when using inside loops!</em> Remember that loop variables are evaluated only during rendering phase.
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private Object[] additionalContext;
-    
+
     @Inject
     private ComponentResources resources;
-    
+
     @InjectContainer
     private ClientElement ownerElement;
-    
+
     @Environmental
     private JavaScriptSupport jsSupport;
 
     @Import(library={"typeahead/typeahead.bundle.js", "typeahead/handlebars-v1.3.0.js"}, stylesheet={"typeahead/typeahead-fixes.css"})
     void afterRender () {
         String[] iterableKeys = StringUtils.split ( keys, ',' );
-        JSONObject params = new JSONObject ( 
+        JSONObject params = new JSONObject (
                 "id",           ownerElement.getClientId (),
                 "url",          resources.createEventLink ( "typeahead", additionalContext ).toAbsoluteURI (),
                 "displayKey",   iterableKeys[0].trim (),
+                "minLength",    minLength,
                 "template",     template
         );
-        
+
         if ( identifierKey != null && identifierField != null ) {
             params.put ( "identifierKey", identifierKey );
             params.put ( "identifierField", identifierField );
         }
-        
+
         jsSupport.require ( "t5xtensions/typeaheadmixin" ).priority ( InitializationPriority.LATE ).with ( params );
     }
-    
+
     Object onTypeahead ( @RequestParameter("t:input") String input, Object ... additionalContext ) throws ClassNotFoundException {
         final Holder<List<?>> holder = new Holder<List<?>> ();
         ComponentEventCallback<List<?>> callback = new ComponentEventCallback<List<?>> () {
+            @Override
             public boolean handleResult ( List<?> result ) {
                 holder.put ( result );
                 return true;
             }
         };
-        
+
         if ( additionalContext != null && additionalContext.length > 0 )
             resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, ArrayUtils.addAll ( new Object[] { input }, additionalContext ), callback );
-        else    
+        else
             resources.triggerEvent ( EVENT_COMPLETIONS_REQUESTED, new Object[] { input }, callback );
-        
+
         JSONArray matches = new JSONArray ();
         for ( Object obj : holder.get () ) {
             JSONObject suggestion = new JSONObject ();
@@ -111,23 +119,23 @@ public class Typeahead {
                 for ( String key : StringUtils.split ( keys, ',' ) )
                     if ( map.containsKey ( key.trim () ) )
                         suggestion.put ( key.trim (), map.get ( key.trim () ) );
-                
+
                 if ( identifierKey != null )
                     if ( map.containsKey ( identifierKey ) )
                         suggestion.put ( identifierKey, map.get ( identifierKey ) );
                     else
                         throw new IllegalArgumentException ( String.format ( "map %s doesn't contain identifier key %s", map, identifierKey ) );
-                
+
                 if ( suggestion.keys ().size () == 0 )
                     throw new IllegalArgumentException ( String.format ( "map %s doesn't have any of provided keys %s", map, keys ) );
             } else {
                 if ( identifierKey != null )
-                    try { 
+                    try {
                         suggestion.put ( identifierKey, BeanUtils.getProperty ( obj, identifierKey.trim () ) );
                     } catch ( Exception e ) {
                         throw new IllegalArgumentException ( String.format ( "cannot get property value of object %s for key %s: %s", obj, identifierKey, e.getMessage ()  ) );
                     }
-                
+
                 for ( String key : StringUtils.split ( keys, ',' ) )
                     try {
                         suggestion.put ( key.trim (), BeanUtils.getProperty ( obj, key.trim () ) );
@@ -135,10 +143,10 @@ public class Typeahead {
                         throw new IllegalArgumentException ( String.format ( "cannot get property value of object %s for key %s: %s", obj, key, e.getMessage ()  ) );
                     }
             }
-            
+
             matches.put ( suggestion );
         }
-        
-        return new JSONObject ( "matches", matches ); 
-    }    
+
+        return new JSONObject ( "matches", matches );
+    }
 }

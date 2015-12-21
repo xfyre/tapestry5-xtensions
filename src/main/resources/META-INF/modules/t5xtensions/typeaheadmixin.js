@@ -24,7 +24,7 @@ define(["jquery", "t5/core/utils"], function($, utils) {
         
         $ttField.typeahead(
             { 
-                minLength: 3,
+                minLength: spec.minLength,
                 highlight: true
             },
             {
