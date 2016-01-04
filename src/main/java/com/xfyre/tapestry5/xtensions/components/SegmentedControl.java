@@ -50,6 +50,9 @@ public class SegmentedControl implements Field {
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false") @Property(read=true,write=false)
     private Boolean showCheckmark;
 
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="false")
+    private Boolean disabled;
+
     @Property
     private OptionModel option;
 
@@ -127,7 +130,7 @@ public class SegmentedControl implements Field {
 
     @Override
     public boolean isDisabled () {
-        return false;
+        return disabled;
     }
 
     @Override
@@ -136,10 +139,9 @@ public class SegmentedControl implements Field {
     }
 
     public String getOptionSegmentClass () {
-        if ( option.getValue () != null && option.getValue ().equals ( value ) )
-            return buttonClass + " active";
-
-        return buttonClass;
+        String segmentClass =  ( option.getValue () != null && option.getValue ().equals ( value ) ) ? buttonClass + " active" : buttonClass;
+        if ( disabled ) segmentClass += " disabled";
+        return segmentClass;
     }
 
     public String getHiddenSubmitId () {
