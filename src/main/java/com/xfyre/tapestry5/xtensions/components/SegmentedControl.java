@@ -5,6 +5,7 @@ import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.corelib.base.AbstractField;
 import org.apache.tapestry5.corelib.components.Submit;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -16,11 +17,11 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
  * @author xfire
  *
  */
-public class SegmentedControl implements Field {
+public class SegmentedControl extends AbstractField {
     /**
      * Value to update
      */
-    @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
+    @Parameter(required=true,principal=true)
     private Object value;
 
     /**
@@ -35,23 +36,14 @@ public class SegmentedControl implements Field {
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="true")
     private Boolean autosubmit;
 
-    @Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
-    private String clientId;
-
     @Parameter(name="class",required=false,defaultPrefix=BindingConstants.LITERAL)
     private String cssClass;
 
     @Parameter(name="buttonClass",required=false,defaultPrefix=BindingConstants.LITERAL,value="btn btn-default")
     private String buttonClass;
 
-    @Parameter(defaultPrefix = BindingConstants.LITERAL)
-    private String label;
-
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false") @Property(read=true,write=false)
     private Boolean showCheckmark;
-
-    @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="false")
-    private Boolean disabled;
 
     @Property
     private OptionModel option;
@@ -64,8 +56,6 @@ public class SegmentedControl implements Field {
 
     @InjectComponent
     private Submit hiddenSubmit;
-
-    private String assignedClientId;
 
     @Property
     private ValueEncoder<OptionModel> optionModelEncoder = new ValueEncoder<OptionModel> () {
@@ -85,12 +75,8 @@ public class SegmentedControl implements Field {
     };
 
 
-    void setupRender () {
-        assignedClientId = javaScriptSupport.allocateClientId ( resources );
-    }
-
     void afterRender () {
-        JSONObject params = new JSONObject ( "clientId", assignedClientId );
+        final JSONObject params = new JSONObject ( "clientId", getClientId () );
         if ( autosubmit )
             params.put ( "autosubmit", true ).put ( "submitId", hiddenSubmit.getClientId () );
 
@@ -106,31 +92,12 @@ public class SegmentedControl implements Field {
     }
 
     public void setValue ( Object value ) {
-        this.value = value;
+        if ( !disabled )
+            this.value = value;
     }
 
     public SelectModel getModel () {
         return model;
-    }
-
-    @Override
-    public String getClientId () {
-        return assignedClientId;
-    }
-
-    @Override
-    public String getControlName () {
-        return null;
-    }
-
-    @Override
-    public String getLabel () {
-        return label;
-    }
-
-    @Override
-    public boolean isDisabled () {
-        return disabled;
     }
 
     @Override
@@ -154,5 +121,9 @@ public class SegmentedControl implements Field {
 
     public String getCssClass () {
         return StringUtils.defaultString ( cssClass );
+    }
+
+    @Override
+    protected void processSubmission ( String controlName ) {
     }
 }
