@@ -45,6 +45,30 @@ public class AjaxUpload extends AbstractField {
     @Parameter(defaultPrefix=BindingConstants.LITERAL)
     private String zone;
     
+    /**
+     * Client ID of form submit element
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=false)
+    private String autosubmit;
+    
+    /**
+     * Client ID of the element used as file drag-n-drop target (by default - the button itself)
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL,required=true,value="prop:formControlId")
+    private String dropTarget;
+    
+    /**
+     * File size limit in bytes
+     */
+    @Parameter(defaultPrefix=BindingConstants.PROP)
+    private Integer sizeLimit;
+    
+    /**
+     * Show progress bar while uploading
+     */
+    @Parameter(defaultPrefix=BindingConstants.PROP,required=true,value="false")
+    private Boolean showProgress;
+    
     @Inject
     private ComponentResources resources;
     
@@ -95,35 +119,39 @@ public class AjaxUpload extends AbstractField {
     
     void beginRender ( MarkupWriter writer ) {
         formSupport.setEncodingType ( MULTIPART_ENCTYPE );
-        writer.element ( "div", "class", "form-control-static" );
-        writer.element ( "span", "class", "btn btn-primary fileinput-button" );
+        writer.element ( "div", "class", "form-control-static", "id", getFormControlId () );
+        writer.element ( "span", "class", "fileinput-button " + cssClass );
         writer.element ( "i", "class", "glyphicon glyphicon-upload" ); writer.end ();
         writer.writeRaw ( "&#160;" );
-        writer.element ( "span" ).raw ( messages.get ( "button.upload" ) ); writer.end ();
+        writer.element ( "span", "id", getFilenameId() ).raw ( createButtonText() ); writer.end ();
         writer.element ( "input", "type", "file", "id", getClientId (), "name", getControlName () );
         
         validate.render ( writer );
         resources.renderInformalParameters ( writer );
-        decorateInsideField();
+        decorateInsideField ();
         
         writer.end (); // input field
         writer.end (); // button span
-        
-        String filenameId = getClientId () + "_filename";
-        writer.element ( "span", "id", filenameId, "style", "margin-left: 16px;" );
-        if ( value != null )
-            writer.write ( String.format ( "%s (%d KB)", value.getFileName (), value.getSize () / 1024 ) );
-        writer.end (); // filename container
-        
         writer.end (); // container div
+        
+        if (showProgress) {
+        	writer.element ( "div", "class", "progress", "style", "display: none;", "id", getClientId() + "_progress" );
+        	writer.element ( "div", "class", "progress-bar progress-bar-info", "role", "progressBar", "width", "0%" );
+        	writer.end (); // progress bar
+        	writer.end (); // progress container
+        }
     }
     
     @Import(stylesheet={"blueimp/css/jquery.fileupload.css"})
     void afterRender ( MarkupWriter writer ) {
         JSONObject spec = new JSONObject (
             "url",      resources.createEventLink ( "upload", getControlName () ).toAbsoluteURI (),
-            "inputId",  getClientId ()
+            "inputId",  getClientId (),
+            "dropZone", dropTarget,
+            "progress",	showProgress
         );
+        
+        if (autosubmit != null) spec.put("submit", autosubmit);
         
         if ( StringUtils.isNotBlank ( zone ) ) {
             Link zoneUpdateUrl = resources.createEventLink ( EVENT_FILE_UPLOADED );
@@ -131,6 +159,9 @@ public class AjaxUpload extends AbstractField {
             spec.put ( "zone", zone );
             spec.put ( "zoneUpdateUrl", zoneUpdateUrl.toAbsoluteURI () );
         }
+        
+        if (sizeLimit != null)
+        	spec.put ( "sizeLimit", sizeLimit );
         
         javaScriptSupport.require ( "t5xtensions/ajaxupload" ).priority ( InitializationPriority.LATE ).with ( spec );
     }
@@ -143,6 +174,7 @@ public class AjaxUpload extends AbstractField {
         files.put ( new JSONObject (
                 "name", value.getFileName (),
                 "size", value.getSize (),
+                "buttonText", createButtonText(),
                 "thumbnailUrl", resources.createEventLink ( "preview", value.getFileName () ).toAbsoluteURI (),
                 "deleteUrl", resources.createEventLink ( "delete", value.getFileName () ).toAbsoluteURI (),
                 "deleteType", "GET"
@@ -156,4 +188,15 @@ public class AjaxUpload extends AbstractField {
         
     }
     
+    public String getFormControlId () {
+    	return getClientId () + "_formcontrol";
+    }
+
+    public String getFilenameId () {
+    	return getClientId () + "_filename";
+    }
+    
+    private String createButtonText () {
+    	return value == null ? messages.get ( "button.upload" ) : String.format ( "%s (%d KB)", value.getFileName (), value.getSize () / 1024 );
+    }
 }

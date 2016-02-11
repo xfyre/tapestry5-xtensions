@@ -1,9 +1,11 @@
 package com.xfyre.tapestry5.xtensions.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.corelib.base.AbstractField;
 import org.apache.tapestry5.corelib.components.Submit;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -15,11 +17,11 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
  * @author xfire
  *
  */
-public class SegmentedControl implements Field {
+public class SegmentedControl extends AbstractField {
     /**
      * Value to update
      */
-    @Parameter(required=true,defaultPrefix=BindingConstants.PROP)
+    @Parameter(required=true,principal=true)
     private Object value;
 
     /**
@@ -34,11 +36,14 @@ public class SegmentedControl implements Field {
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP,value="true")
     private Boolean autosubmit;
 
-    @Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
-    private String clientId;
+    @Parameter(name="class",required=false,defaultPrefix=BindingConstants.LITERAL)
+    private String cssClass;
 
-    @Parameter(defaultPrefix = BindingConstants.LITERAL)
-    private String label;
+    @Parameter(name="buttonClass",required=false,defaultPrefix=BindingConstants.LITERAL,value="btn btn-default")
+    private String buttonClass;
+
+    @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false") @Property(read=true,write=false)
+    private Boolean showCheckmark;
 
     @Property
     private OptionModel option;
@@ -62,18 +67,23 @@ public class SegmentedControl implements Field {
         @Override
         public OptionModel toValue ( String clientValue ) {
             String[] parts = clientValue.split ( "::" );
-            return new OptionModelImpl ( parts[1], parts[0] );
+            if ( parts.length > 1 )
+                return new OptionModelImpl ( parts[1], parts[0] );
+            else
+                return new OptionModelImpl ( parts[0], parts[0] );
         }
     };
 
+
     void afterRender () {
-        if ( autosubmit ) {
-            JSONObject params = new JSONObject (
-                "clientId", clientId,
-                "submitId", hiddenSubmit.getClientId ()
-            );
-            javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
-        }
+        final JSONObject params = new JSONObject ( "clientId", getClientId () );
+        if ( autosubmit )
+            params.put ( "autosubmit", true ).put ( "submitId", hiddenSubmit.getClientId () );
+
+        if ( showCheckmark )
+            params.put ( "showCheckmark", true );
+
+        javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
     }
 
 
@@ -82,31 +92,12 @@ public class SegmentedControl implements Field {
     }
 
     public void setValue ( Object value ) {
-        this.value = value;
+        if ( !disabled )
+            this.value = value;
     }
 
     public SelectModel getModel () {
         return model;
-    }
-
-    @Override
-    public String getClientId () {
-        return clientId;
-    }
-
-    @Override
-    public String getControlName () {
-        return null;
-    }
-
-    @Override
-    public String getLabel () {
-        return label;
-    }
-
-    @Override
-    public boolean isDisabled () {
-        return false;
     }
 
     @Override
@@ -115,10 +106,9 @@ public class SegmentedControl implements Field {
     }
 
     public String getOptionSegmentClass () {
-        if ( option.getValue () != null && option.getValue ().equals ( value ) )
-            return "active";
-
-        return "";
+        String segmentClass =  ( option.getValue () != null && option.getValue ().equals ( value ) ) ? buttonClass + " active" : buttonClass;
+        if ( disabled ) segmentClass += " disabled";
+        return segmentClass;
     }
 
     public String getHiddenSubmitId () {
@@ -129,4 +119,11 @@ public class SegmentedControl implements Field {
         return autosubmit != null && autosubmit;
     }
 
+    public String getCssClass () {
+        return StringUtils.defaultString ( cssClass );
+    }
+
+    @Override
+    protected void processSubmission ( String controlName ) {
+    }
 }

@@ -1,14 +1,14 @@
 define(["jquery", "t5/core/events"], function($, events) {
     return function(clientId) {
         var setupBootstrapFormHelpers = function(){
-            $('form input[type="text"].bfh-phone, form input[type="tel"].bfh-phone, span.bfh-phone').each(function () {
-                var $phone;
-                $phone = $(this);
-                $phone.bfhphone($phone.data());
+            $('#' + clientId).each(function () {
+                var $phone = $(this)
+                console.log("setting up phone input/display for " + $phone.attr('id'))
+                $phone.bfhphone($phone.data())
             });
         };
         
-        $(document.body).on(events.zone.update, setupBootstrapFormHelpers);
-        setupBootstrapFormHelpers();
-    };    
-});
+        $(document.body).on(events.zone.update, setupBootstrapFormHelpers)
+        setupBootstrapFormHelpers()
+    }    
+})

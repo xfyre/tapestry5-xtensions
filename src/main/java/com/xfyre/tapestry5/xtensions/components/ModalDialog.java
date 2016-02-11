@@ -1,5 +1,6 @@
 package com.xfyre.tapestry5.xtensions.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Events;
@@ -34,11 +35,11 @@ public class ModalDialog implements ClientElement {
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
     private String title;
 
-    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="800")
-    private Integer width;
+    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
+    private String width;
 
-    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="600")
-    private Integer height;
+    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
+    private String height;
 
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false")
     private Boolean enableFooter;
@@ -49,9 +50,15 @@ public class ModalDialog implements ClientElement {
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private String updateZone;
 
+    /**
+     * Context for <b>modalHidden</b> event
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private Object[] updateContext;
 
+    /**
+     * Hide modal after updating its own zone
+     */
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false")
     private Boolean hideAfterZoneUpdate;
 
@@ -73,8 +80,6 @@ public class ModalDialog implements ClientElement {
     private void afterRender () {
         JSONObject params = new JSONObject (
                 "id", getClientId (),
-                "width", width,
-                "height", height,
                 "hide", hideAfterZoneUpdate
         );
 
@@ -86,11 +91,17 @@ public class ModalDialog implements ClientElement {
             params.put ( "updateZoneLink", link.toAbsoluteURI () );
         }
 
+        if ( StringUtils.isNotBlank ( width ) )
+            params.put ( "width", width );
+
+        if ( StringUtils.isNotBlank ( height ) )
+            params.put ( "height", height );
+
         javaScriptSupport.require ( "t5xtensions/modaldialog" ).with ( params );
     }
 
-    public Integer getLeftMargin () {
-        return - ( width / 2 );
-    }
+//    public Integer getLeftMargin () {
+//        return - ( width / 2 );
+//    }
 
 }
