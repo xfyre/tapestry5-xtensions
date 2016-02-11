@@ -46,6 +46,18 @@ public class AjaxUpload extends AbstractField {
     private String zone;
     
     /**
+     * Custom text for the button; if not provided, a default value of "Upload" will be used.
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL)
+    private String buttonText;
+    /**
+     * Custom glyphicon name for the button; if not provided, a default value of "glyphicon-upload" will be used.
+     * The value of this parameter must be in the form of glyphicon-[name]. For example: "glyphicon-search"
+     */
+    @Parameter(defaultPrefix=BindingConstants.LITERAL)
+    private String glyphiconName;
+    
+    /**
      * Client ID of form submit element
      */
     @Parameter(defaultPrefix=BindingConstants.LITERAL,required=false)
@@ -121,7 +133,11 @@ public class AjaxUpload extends AbstractField {
         formSupport.setEncodingType ( MULTIPART_ENCTYPE );
         writer.element ( "div", "class", "form-control-static", "id", getFormControlId () );
         writer.element ( "span", "class", "fileinput-button " + cssClass );
-        writer.element ( "i", "class", "glyphicon glyphicon-upload" ); writer.end ();
+        if(StringUtils.isNotBlank(glyphiconName)) {
+        	writer.element ( "i", "class", "glyphicon " + glyphiconName); writer.end ();
+        } else {
+        	writer.element ( "i", "class", "glyphicon glyphicon-upload" ); writer.end ();
+        }
         writer.writeRaw ( "&#160;" );
         writer.element ( "span", "id", getFilenameId() ).raw ( createButtonText() ); writer.end ();
         writer.element ( "input", "type", "file", "id", getClientId (), "name", getControlName () );
@@ -197,6 +213,14 @@ public class AjaxUpload extends AbstractField {
     }
     
     private String createButtonText () {
-    	return value == null ? messages.get ( "button.upload" ) : String.format ( "%s (%d KB)", value.getFileName (), value.getSize () / 1024 );
+    	
+    	if(value == null) {
+    		// awaiting file upload
+    		return StringUtils.isNotBlank(buttonText) ? buttonText : messages.get ( "button.upload" );
+    	} else {
+    		// file uploaded
+    		return String.format ( "%s (%d KB)", value.getFileName (), value.getSize () / 1024 );
+    	}
+    	
     }
 }
