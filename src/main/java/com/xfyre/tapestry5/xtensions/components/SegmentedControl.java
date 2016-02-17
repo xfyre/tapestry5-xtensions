@@ -2,10 +2,12 @@ package com.xfyre.tapestry5.xtensions.components;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
+import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.base.AbstractField;
+import org.apache.tapestry5.corelib.components.RadioGroup;
 import org.apache.tapestry5.corelib.components.Submit;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -29,6 +31,12 @@ public class SegmentedControl extends AbstractField {
      */
     @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
     private SelectModel model;
+
+    /**
+     * Validation
+     */
+    @Parameter(defaultPrefix = BindingConstants.VALIDATE) @Property(read=true,write=false)
+    private FieldValidator<Object> validate;
 
     /**
      * Automatically submit enclosing form on change
@@ -56,6 +64,12 @@ public class SegmentedControl extends AbstractField {
 
     @InjectComponent
     private Submit hiddenSubmit;
+
+    @InjectComponent @Property(read=true,write=false)
+    private RadioGroup segmentedControlRadio;
+
+    @Environmental
+    private ValidationTracker tracker;
 
     @Property
     private ValueEncoder<OptionModel> optionModelEncoder = new ValueEncoder<OptionModel> () {
@@ -121,6 +135,14 @@ public class SegmentedControl extends AbstractField {
 
     public String getCssClass () {
         return StringUtils.defaultString ( cssClass );
+    }
+
+    public boolean isValidationError () {
+        return tracker.inError ( segmentedControlRadio );
+    }
+
+    public String getErrorText () {
+        return tracker.getError ( segmentedControlRadio );
     }
 
     @Override
