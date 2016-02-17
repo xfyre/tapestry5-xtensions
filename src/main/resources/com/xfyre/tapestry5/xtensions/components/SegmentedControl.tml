@@ -8,7 +8,7 @@
     <t:radiogroup t:id="segmentedControlRadio" p:value="value" disabled="prop:disabled" validate="prop:validate">
       <t:loop p:source="model.options" p:value="option" p:encoder="optionModelEncoder">
         <label for="radioControl" class="${optionSegmentClass}">
-          <t:radio p:value="option.value" t:id="radioControl" disabled="prop:disabled"/>
+          <t:radio p:value="option.value" t:id="radioControl"/>
           <t:if test="showCheckmark"><span data-segment-icon="true"/>&#160;</t:if>
           <span class="segment-label">${option.label}</span>
         </label>

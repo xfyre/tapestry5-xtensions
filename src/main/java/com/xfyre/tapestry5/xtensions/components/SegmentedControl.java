@@ -1,5 +1,7 @@
 package com.xfyre.tapestry5.xtensions.components;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.Environmental;
@@ -53,6 +55,9 @@ public class SegmentedControl extends AbstractField {
     @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false") @Property(read=true,write=false)
     private Boolean showCheckmark;
 
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
+    private Object[] disabledValues;
+
     @Property
     private OptionModel option;
 
@@ -100,7 +105,6 @@ public class SegmentedControl extends AbstractField {
         javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
     }
 
-
     public Object getValue () {
         return value;
     }
@@ -119,9 +123,19 @@ public class SegmentedControl extends AbstractField {
         return false;
     }
 
+    public boolean isDisabledOption () {
+        if ( disabled )
+            return true;
+
+        if ( disabledValues == null )
+            return false;
+
+        return Arrays.asList ( disabledValues ).contains ( option.getValue () );
+    }
+
     public String getOptionSegmentClass () {
         String segmentClass =  ( option.getValue () != null && option.getValue ().equals ( value ) ) ? buttonClass + " active" : buttonClass;
-        if ( disabled ) segmentClass += " disabled";
+        if ( isDisabledOption () ) segmentClass += " disabled";
         return segmentClass;
     }
 
