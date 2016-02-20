@@ -159,6 +159,13 @@ public class SegmentedControl extends AbstractField {
         return tracker.getError ( segmentedControlRadio );
     }
 
+    public FieldValidator<Object> getActualValidate () {
+        if ( disabled )
+            return null;
+
+        return validate;
+    }
+
     @Override
     protected void processSubmission ( String controlName ) {
     }

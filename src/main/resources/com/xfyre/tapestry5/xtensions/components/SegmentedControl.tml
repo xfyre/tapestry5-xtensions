@@ -5,7 +5,7 @@
 
   <t:if p:test="autosubmit"><t:submit t:id="hiddenSubmit" p:defer="false" class="hidden"/></t:if>
   <div class="btn-group ${cssClass}" data-toggle="buttons" id="${clientId}">
-    <t:radiogroup t:id="segmentedControlRadio" p:value="value" disabled="prop:disabled" validate="prop:validate">
+    <t:radiogroup t:id="segmentedControlRadio" p:value="value" disabled="prop:disabled" validate="prop:actualValidate">
       <t:loop p:source="model.options" p:value="option" p:encoder="optionModelEncoder">
         <label for="radioControl" class="${optionSegmentClass}">
           <t:radio p:value="option.value" t:id="radioControl"/>
