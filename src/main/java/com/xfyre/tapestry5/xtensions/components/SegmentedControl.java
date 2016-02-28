@@ -4,10 +4,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
-import org.apache.tapestry5.annotations.Environmental;
-import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.annotations.Parameter;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.base.AbstractField;
 import org.apache.tapestry5.corelib.components.RadioGroup;
 import org.apache.tapestry5.corelib.components.Submit;
@@ -21,6 +18,7 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
  * @author xfire
  *
  */
+@Events("valueChanged")
 public class SegmentedControl extends AbstractField {
     /**
      * Value to update
@@ -103,6 +101,11 @@ public class SegmentedControl extends AbstractField {
             params.put ( "showCheckmark", true );
 
         javaScriptSupport.require ( "t5xtensions/segmentedcontrol" ).with ( params );
+    }
+
+    void onSelectedFromHiddenSubmit () {
+        if ( ! isValidationError () )
+            resources.triggerEvent ( "valueChanged", new Object[] { getValue () }, null );
     }
 
     public Object getValue () {
