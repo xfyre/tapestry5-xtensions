@@ -3,12 +3,12 @@
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
   xmlns:p="tapestry:parameter">
 
-  <t:if p:test="autosubmit"><t:submit t:id="hiddenSubmit" p:defer="false" class="hidden"/></t:if>
+  <t:if test="autosubmit"><t:submit t:id="hiddenSubmit" defer="false" class="hidden"/></t:if>
   <div class="btn-group ${cssClass}" data-toggle="buttons" id="${clientId}">
-    <t:radiogroup t:id="segmentedControlRadio" p:value="value" disabled="prop:disabled" validate="prop:actualValidate">
-      <t:loop p:source="model.options" p:value="option" p:encoder="optionModelEncoder">
+    <t:radiogroup t:id="segmentedControlRadio" value="value" disabled="prop:disabled" validate="prop:actualValidate">
+      <t:loop source="model.options" value="option" encoder="optionModelEncoder">
         <label for="radioControl" class="${optionSegmentClass}">
-          <t:radio p:value="option.value" t:id="radioControl"/>
+          <t:radio value="option.value" t:id="radioControl"/>
           <t:if test="showCheckmark"><span data-segment-icon="true"/>&#160;</t:if>
           <span class="segment-label">${option.label}</span>
         </label>

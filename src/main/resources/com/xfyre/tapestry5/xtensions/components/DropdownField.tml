@@ -2,12 +2,12 @@
     xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
     xmlns:p="tapestry:parameter">
 
-  <t:hidden t:id="valueField" p:value="value"/>
+  <t:hidden t:id="valueField" value="value"/>
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" t:type="any" t:id="dropdownButton">
     <span t:type="any" t:id="currentValueLabel">${label}</span>&#160;<span class="caret"></span>
   </button>
   <ul class="dropdown-menu" t:type="any" t:id="dropdownMenu" role="menu">
-    <li t:type="loop" p:source="model.options" p:value="option" p:encoder="dropdownOptionEncoder">
+    <li t:type="loop" source="model.options" value="option" encoder="dropdownOptionEncoder">
       <a href="#" data-value="${option.value}" data-label="${option.label}" role="menuitem">${option.label}</a>
     </li>
   </ul>
