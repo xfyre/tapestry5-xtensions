@@ -1,28 +1,20 @@
 define(["jquery","t5/core/events", "t5/core/zone", "bootstrap/modal"], function($, events, zone) {
     return function(spec) {
-        var $modal = $('#' + spec.id);
-        
-        /*
-        if (spec.width) {
-            var realWidth = spec.width > $(window).width() ? $(window).width() : spec.width;
-            $('#' + spec.id + ' > .modal-dialog').width(realWidth);
-        }
-        */
-        
+        var $modal = $('#' + spec.id)
+
         $modal.on('hidden.bs.modal', function(event) {
-            $modal.remove();
-            
+            $modal.remove()
             if (spec.updateZoneLink) {
-                var $zone = $('#' + spec.zoneId);
-                $zone.trigger(events.zone.refresh, {url: spec.updateZoneLink});
+                $('#' + spec.updateZone).trigger(events.zone.refresh, {url: spec.updateZoneLink})
             }
-        });
+        })
 
-        if (spec.hide && spec.zoneId) {
-            var $zone = $('#' + spec.zoneId);
-            $zone.on(events.zone.update, function(){ $modal.modal('hide'); })
-        }
+        if (spec.monitorZone)
+            $('#' + spec.monitorZone).on(events.zone.didUpdate, function(event){
+                if (spec.hide && !$modal.find('form[data-submission-failed="true"]').length) $modal.modal('hide') 
+            })
 
-        $modal.modal();
-    };
+        $modal.modal()
+    }
 });
+

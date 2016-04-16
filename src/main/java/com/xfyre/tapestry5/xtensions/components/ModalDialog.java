@@ -1,11 +1,11 @@
 package com.xfyre.tapestry5.xtensions.components;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Events;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.internal.util.Holder;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.Request;
@@ -35,14 +35,14 @@ public class ModalDialog implements ClientElement {
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
     private String title;
 
-    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
-    private String width;
-
-    @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL)
-    private String height;
-
     @Property @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="false")
     private Boolean enableFooter;
+
+    /**
+     * Zone to monitor for updates
+     */
+    @Parameter(required=false,defaultPrefix=BindingConstants.PROP)
+    private String monitorZone;
 
     /**
      * Zone to update when user dismisses modal
@@ -78,30 +78,30 @@ public class ModalDialog implements ClientElement {
 
     @AfterRender
     private void afterRender () {
-        JSONObject params = new JSONObject (
+        final JSONObject params = new JSONObject (
                 "id", getClientId (),
                 "hide", hideAfterZoneUpdate
         );
 
         if ( updateZone != null ) {
-            Link link = updateContext == null ?
-                    resources.createEventLink ( "modalHidden" ) :
-                    resources.createEventLink ( "modalHidden", updateContext );
-            params.put ( "zoneId", updateZone );
+            final Link link = updateContext == null ?
+                    resources.createEventLink ( "modalHiddenInternal" ) :
+                    resources.createEventLink ( "modalHiddenInternal", updateContext );
+            params.put ( "updateZone", updateZone );
+            params.put ( "monitorZone", monitorZone );
             params.put ( "updateZoneLink", link.toAbsoluteURI () );
         }
-
-        if ( StringUtils.isNotBlank ( width ) )
-            params.put ( "width", width );
-
-        if ( StringUtils.isNotBlank ( height ) )
-            params.put ( "height", height );
 
         javaScriptSupport.require ( "t5xtensions/modaldialog" ).with ( params );
     }
 
-//    public Integer getLeftMargin () {
-//        return - ( width / 2 );
-//    }
+    Object onModalHiddenInternal ( EventContext ctx ) {
+        final Holder<Object> holder = new Holder<> ();
+        final boolean eventResult = resources.triggerContextEvent ( EVENT_MODAL_HIDDEN, ctx, result -> {
+            holder.put ( result );
+            return true;
+        } );
+        return eventResult ? holder.get () : null;
+    }
 
 }
