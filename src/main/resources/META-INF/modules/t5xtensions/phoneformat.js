@@ -1,4 +1,4 @@
-define(["jquery", "t5/core/events"], function($, events) {
+define(["jquery", "t5/core/events", "intlTelInputUtils"], function($, events, intlTelInputUtils) {
     return function(spec) {
         var $phone   = $('#' + spec.elementId)
         var $country = $('#' + $phone.data('country')) 
@@ -24,7 +24,7 @@ define(["jquery", "t5/core/events"], function($, events) {
         }
         $(document.body).on(events.zone.update, setupPhoneInput)
         $country.on('change', function(event) { $phone.intlTelInput("setCountry", $country.val().toLowerCase()) })
-        $phone.on('blur', function(event) { $phone.val($phone.intlTelInput("getNumber", 1)) })
+        $phone.on('blur', function(event) { $phone.val($phone.intlTelInput("getNumber", intlTelInputUtils.numberFormat.INTERNATIONAL)) })
         setupPhoneInput()
     }    
 })
