@@ -25,7 +25,8 @@ define(["jquery", "t5/core/utils"], function($, utils) {
         $ttField.typeahead(
             { 
                 minLength: spec.minLength,
-                highlight: true
+                highlight: true,
+                hint: spec.showHint
             },
             {
                 name: 'suggestions-list',

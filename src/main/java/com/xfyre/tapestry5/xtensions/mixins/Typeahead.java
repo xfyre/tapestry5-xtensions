@@ -22,6 +22,9 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 public class Typeahead {
     public static final String EVENT_COMPLETIONS_REQUESTED = "completionsRequested";
 
+    @Parameter(required=false,defaultPrefix=BindingConstants.LITERAL,value="true")
+    private Boolean showHint;
+
     /**
      * Suggestion template. Equals to <strong>{{value}}</strong> by default. If you specify
      * non-default template, make sure you set <strong>keys</strong> accordingly.
@@ -82,7 +85,8 @@ public class Typeahead {
                 "url",          resources.createEventLink ( "typeahead", additionalContext ).toAbsoluteURI (),
                 "displayKey",   iterableKeys[0].trim (),
                 "minLength",    minLength,
-                "template",     template
+                "template",     template,
+                "showHint",     showHint
         );
 
         if ( identifierKey != null && identifierField != null ) {
@@ -94,7 +98,7 @@ public class Typeahead {
     }
 
     Object onTypeahead ( @RequestParameter("t:input") String input, Object ... additionalContext ) throws ClassNotFoundException {
-        final Holder<List<?>> holder = new Holder<List<?>> ();
+        final Holder<List<?>> holder = new Holder<> ();
         ComponentEventCallback<List<?>> callback = new ComponentEventCallback<List<?>> () {
             @Override
             public boolean handleResult ( List<?> result ) {
