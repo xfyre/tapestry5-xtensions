@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xfyre</groupId>
   <artifactId>tapestry5-xtensions</artifactId>
-  <version>0.93-SNAPSHOT</version>
+  <version>0.94-SNAPSHOT</version>
   <name>Tapestry 5 Extensions</name>
   <description>Collection of Tapestry 5 components and mixins written to enhance overall UX and Twitter Bootstrap integration</description>
   <url>https://github.com/xfyre/tapestry5-xtensions</url>

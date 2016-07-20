@@ -25,7 +25,7 @@ public class PhoneFormat {
     @Inject @Path("intl-tel-input/js/utils.js")
     private Asset utilsScript;
 
-    @Import(library="intl-tel-input/js/intlTelInput.js", stylesheet="intl-tel-input/css/intlTelInput.css")
+    @Import(library="intl-tel-input/js/intlTelInput.min.js", stylesheet="intl-tel-input/css/intlTelInput.css")
     void afterRender () {
         final JSONObject params = new JSONObject ( "elementId", ownerElement.getClientId (), "utilsPath", utilsScript.toClientURL () );
         javaScriptSupport.require ( "t5xtensions/phoneformat" ).priority ( InitializationPriority.LATE ).with ( params );
