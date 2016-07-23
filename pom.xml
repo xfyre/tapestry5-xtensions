@@ -16,8 +16,8 @@
   </licenses>
   <scm>
     <url>https://github.com/xfyre/tapestry5-xtensions</url>
-    <connection>git@github.com:xfyre/tapestry5-xtensions.git</connection>
-    <developerConnection>git@github.com:xfyre/tapestry5-xtensions.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com/xfyre/tapestry5-xtensions.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/xfyre/tapestry5-xtensions.git</developerConnection>
   </scm>
   <developers>
     <developer>
