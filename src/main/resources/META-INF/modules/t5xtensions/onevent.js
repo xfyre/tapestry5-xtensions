@@ -15,6 +15,7 @@ define(["jquery", "t5/core/events"], function($, events) {
                         var submit = $('#' + spec.submitId);
                         submit.click();
                     } else {
+                        // TODO: also check for [data-container-type="zone"] selector
                         var zoneElement = spec.zoneId === '^' ? $(element).closest('.t-zone') : $("#" + spec.zoneId);
 
                         if (!zoneElement) {
