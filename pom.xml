@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xfyre</groupId>
   <artifactId>tapestry5-xtensions</artifactId>
-  <version>0.98</version>
+  <version>0.99-SNAPSHOT</version>
   <name>Tapestry 5 Extensions</name>
   <description>Collection of Tapestry 5 components and mixins written to enhance overall UX and Twitter Bootstrap integration</description>
   <url>https://github.com/xfyre/tapestry5-xtensions</url>
@@ -17,7 +17,7 @@
     <url>https://github.com/xfyre/tapestry5-xtensions</url>
     <connection>scm:git:ssh://git@github.com/xfyre/tapestry5-xtensions.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/xfyre/tapestry5-xtensions.git</developerConnection>
-    <tag>tapestry5-xtensions-0.98</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
